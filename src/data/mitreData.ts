@@ -57,6 +57,66 @@ export const mitreData: Tactic[] = [
             severity: 'medium',
             description: 'Phishing email with suspicious link',
             mitigated: true
+          },
+          {
+            id: 'att_003',
+            user: 'mark.davis@company.com',
+            endpoint: 'WS-010-MD',
+            timestamp: '2024-01-13T16:15:00Z',
+            organization: 'emea',
+            severity: 'high',
+            description: 'Business email compromise attempt',
+            mitigated: false
+          },
+          {
+            id: 'att_004',
+            user: 'lisa.wong@company.com',
+            endpoint: 'WS-011-LW',
+            timestamp: '2024-01-12T09:45:00Z',
+            organization: 'apac',
+            severity: 'medium',
+            description: 'Credential harvesting phishing page',
+            mitigated: true
+          },
+          {
+            id: 'att_005',
+            user: 'carlos.rodriguez@company.com',
+            endpoint: 'WS-012-CR',
+            timestamp: '2024-01-11T11:30:00Z',
+            organization: 'americas',
+            severity: 'high',
+            description: 'CEO impersonation phishing email',
+            mitigated: false
+          },
+          {
+            id: 'att_006',
+            user: 'anna.mueller@company.com',
+            endpoint: 'WS-013-AM',
+            timestamp: '2024-01-10T13:20:00Z',
+            organization: 'emea',
+            severity: 'low',
+            description: 'Generic phishing email blocked by filter',
+            mitigated: true
+          },
+          {
+            id: 'att_007',
+            user: 'david.kim@company.com',
+            endpoint: 'WS-014-DK',
+            timestamp: '2024-01-09T15:10:00Z',
+            organization: 'apac',
+            severity: 'medium',
+            description: 'Tax-themed phishing campaign',
+            mitigated: false
+          },
+          {
+            id: 'att_008',
+            user: 'sarah.johnson@company.com',
+            endpoint: 'WS-015-SJ',
+            timestamp: '2024-01-08T08:45:00Z',
+            organization: 'operations',
+            severity: 'high',
+            description: 'Advanced persistent threat phishing',
+            mitigated: false
           }
         ],
         subTechniques: [
@@ -65,13 +125,33 @@ export const mitreData: Tactic[] = [
             name: 'Spearphishing Attachment',
             attacks: [
               {
-                id: 'att_003',
+                id: 'att_009',
                 user: 'mike.wilson@company.com',
                 endpoint: 'WS-003-MW',
                 timestamp: '2024-01-13T09:15:00Z',
                 organization: 'emea',
                 severity: 'high',
                 description: 'Malicious PDF attachment opened',
+                mitigated: false
+              },
+              {
+                id: 'att_010',
+                user: 'emily.chen@company.com',
+                endpoint: 'WS-016-EC',
+                timestamp: '2024-01-07T14:30:00Z',
+                organization: 'apac',
+                severity: 'medium',
+                description: 'Word document with macro',
+                mitigated: true
+              },
+              {
+                id: 'att_011',
+                user: 'robert.taylor@company.com',
+                endpoint: 'WS-017-RT',
+                timestamp: '2024-01-06T10:20:00Z',
+                organization: 'americas',
+                severity: 'high',
+                description: 'Excel file with embedded payload',
                 mitigated: false
               }
             ]
@@ -81,7 +161,7 @@ export const mitreData: Tactic[] = [
             name: 'Spearphishing Link',
             attacks: [
               {
-                id: 'att_004',
+                id: 'att_012',
                 user: 'sarah.jones@company.com',
                 endpoint: 'WS-004-SJ',
                 timestamp: '2024-01-12T16:45:00Z',
@@ -104,13 +184,33 @@ export const mitreData: Tactic[] = [
         name: 'Exploit Public-Facing Application',
         attacks: [
           {
-            id: 'att_005',
+            id: 'att_013',
             user: 'system',
             endpoint: 'SRV-WEB-01',
             timestamp: '2024-01-11T22:30:00Z',
             organization: 'operations',
             severity: 'high',
             description: 'SQL injection attempt on web application',
+            mitigated: true
+          },
+          {
+            id: 'att_014',
+            user: 'system',
+            endpoint: 'SRV-WEB-02',
+            timestamp: '2024-01-10T18:45:00Z',
+            organization: 'operations',
+            severity: 'high',
+            description: 'Remote code execution vulnerability exploited',
+            mitigated: false
+          },
+          {
+            id: 'att_015',
+            user: 'system',
+            endpoint: 'SRV-API-01',
+            timestamp: '2024-01-09T20:15:00Z',
+            organization: 'operations',
+            severity: 'medium',
+            description: 'API endpoint enumeration attempt',
             mitigated: true
           }
         ],
@@ -119,7 +219,18 @@ export const mitreData: Tactic[] = [
       {
         id: 'T1078',
         name: 'Valid Accounts',
-        attacks: [],
+        attacks: [
+          {
+            id: 'att_016',
+            user: 'admin@company.com',
+            endpoint: 'SRV-DC-01',
+            timestamp: '2024-01-08T02:30:00Z',
+            organization: 'operations',
+            severity: 'high',
+            description: 'Suspicious admin account activity detected',
+            mitigated: false
+          }
+        ],
         subTechniques: [
           {
             id: 'T1078.001',
@@ -129,7 +240,18 @@ export const mitreData: Tactic[] = [
           {
             id: 'T1078.002',
             name: 'Domain Accounts',
-            attacks: []
+            attacks: [
+              {
+                id: 'att_017',
+                user: 'service.account@company.com',
+                endpoint: 'SRV-APP-01',
+                timestamp: '2024-01-07T19:20:00Z',
+                organization: 'operations',
+                severity: 'medium',
+                description: 'Compromised service account detected',
+                mitigated: true
+              }
+            ]
           },
           {
             id: 'T1078.003',
@@ -160,7 +282,7 @@ export const mitreData: Tactic[] = [
         name: 'Command and Scripting Interpreter',
         attacks: [
           {
-            id: 'att_006',
+            id: 'att_018',
             user: 'admin@company.com',
             endpoint: 'SRV-DC-01',
             timestamp: '2024-01-10T11:20:00Z',
@@ -168,6 +290,46 @@ export const mitreData: Tactic[] = [
             severity: 'high',
             description: 'Suspicious PowerShell execution detected',
             mitigated: false
+          },
+          {
+            id: 'att_019',
+            user: 'tech.support@company.com',
+            endpoint: 'WS-020-TS',
+            timestamp: '2024-01-09T15:30:00Z',
+            organization: 'operations',
+            severity: 'medium',
+            description: 'Batch script execution anomaly',
+            mitigated: true
+          },
+          {
+            id: 'att_020',
+            user: 'developer@company.com',
+            endpoint: 'WS-021-DEV',
+            timestamp: '2024-01-08T10:45:00Z',
+            organization: 'operations',
+            severity: 'low',
+            description: 'Python script with network activity',
+            mitigated: true
+          },
+          {
+            id: 'att_021',
+            user: 'analyst@company.com',
+            endpoint: 'WS-022-AN',
+            timestamp: '2024-01-07T14:15:00Z',
+            organization: 'ipac',
+            severity: 'high',
+            description: 'Obfuscated command execution',
+            mitigated: false
+          },
+          {
+            id: 'att_022',
+            user: 'intern@company.com',
+            endpoint: 'WS-023-IN',
+            timestamp: '2024-01-06T09:30:00Z',
+            organization: 'emea',
+            severity: 'medium',
+            description: 'Suspicious shell command detected',
+            mitigated: true
           }
         ],
         subTechniques: [
@@ -176,7 +338,7 @@ export const mitreData: Tactic[] = [
             name: 'PowerShell',
             attacks: [
               {
-                id: 'att_007',
+                id: 'att_023',
                 user: 'bob.tech@company.com',
                 endpoint: 'WS-005-BT',
                 timestamp: '2024-01-09T13:55:00Z',
@@ -184,13 +346,74 @@ export const mitreData: Tactic[] = [
                 severity: 'medium',
                 description: 'Encoded PowerShell command execution',
                 mitigated: true
+              },
+              {
+                id: 'att_024',
+                user: 'admin.user@company.com',
+                endpoint: 'WS-024-AU',
+                timestamp: '2024-01-08T16:20:00Z',
+                organization: 'operations',
+                severity: 'high',
+                description: 'PowerShell Empire framework detected',
+                mitigated: false
+              },
+              {
+                id: 'att_025',
+                user: 'security.analyst@company.com',
+                endpoint: 'WS-025-SA',
+                timestamp: '2024-01-07T11:10:00Z',
+                organization: 'operations',
+                severity: 'low',
+                description: 'Legitimate security script flagged',
+                mitigated: true
+              },
+              {
+                id: 'att_026',
+                user: 'maintenance@company.com',
+                endpoint: 'SRV-MAINT-01',
+                timestamp: '2024-01-06T22:45:00Z',
+                organization: 'operations',
+                severity: 'medium',
+                description: 'After-hours PowerShell activity',
+                mitigated: false
+              },
+              {
+                id: 'att_027',
+                user: 'backup.service@company.com',
+                endpoint: 'SRV-BACKUP-01',
+                timestamp: '2024-01-05T03:30:00Z',
+                organization: 'operations',
+                severity: 'high',
+                description: 'Malicious PowerShell in backup process',
+                mitigated: false
+              },
+              {
+                id: 'att_028',
+                user: 'helpdesk@company.com',
+                endpoint: 'WS-026-HD',
+                timestamp: '2024-01-04T12:15:00Z',
+                organization: 'ipac',
+                severity: 'low',
+                description: 'PowerShell remote assistance session',
+                mitigated: true
               }
             ]
           },
           {
             id: 'T1059.003',
             name: 'Windows Command Shell',
-            attacks: []
+            attacks: [
+              {
+                id: 'att_029',
+                user: 'system.admin@company.com',
+                endpoint: 'WS-027-SYS',
+                timestamp: '2024-01-03T14:30:00Z',
+                organization: 'operations',
+                severity: 'medium',
+                description: 'Suspicious cmd.exe execution pattern',
+                mitigated: true
+              }
+            ]
           },
           {
             id: 'T1059.006',
@@ -207,7 +430,18 @@ export const mitreData: Tactic[] = [
       {
         id: 'T1203',
         name: 'Exploitation for Client Execution',
-        attacks: [],
+        attacks: [
+          {
+            id: 'att_030',
+            user: 'marketing@company.com',
+            endpoint: 'WS-028-MKT',
+            timestamp: '2024-01-02T10:20:00Z',
+            organization: 'americas',
+            severity: 'high',
+            description: 'Browser exploitation attempt detected',
+            mitigated: false
+          }
+        ],
         subTechniques: []
       },
       {
@@ -218,7 +452,18 @@ export const mitreData: Tactic[] = [
           {
             id: 'T1204.001',
             name: 'Malicious Link',
-            attacks: []
+            attacks: [
+              {
+                id: 'att_031',
+                user: 'finance@company.com',
+                endpoint: 'WS-029-FIN',
+                timestamp: '2024-01-01T16:45:00Z',
+                organization: 'americas',
+                severity: 'medium',
+                description: 'User clicked malicious advertisement',
+                mitigated: true
+              }
+            ]
           },
           {
             id: 'T1204.002',
@@ -236,12 +481,44 @@ export const mitreData: Tactic[] = [
       {
         id: 'T1547',
         name: 'Boot or Logon Autostart Execution',
-        attacks: [],
+        attacks: [
+          {
+            id: 'att_032',
+            user: 'system',
+            endpoint: 'WS-030-USR',
+            timestamp: '2023-12-31T23:15:00Z',
+            organization: 'operations',
+            severity: 'high',
+            description: 'Unauthorized startup program detected',
+            mitigated: false
+          },
+          {
+            id: 'att_033',
+            user: 'local.admin@company.com',
+            endpoint: 'WS-031-LA',
+            timestamp: '2023-12-30T08:30:00Z',
+            organization: 'emea',
+            severity: 'medium',
+            description: 'Registry startup modification',
+            mitigated: true
+          }
+        ],
         subTechniques: [
           {
             id: 'T1547.001',
             name: 'Registry Run Keys / Startup Folder',
-            attacks: []
+            attacks: [
+              {
+                id: 'att_034',
+                user: 'malware.process',
+                endpoint: 'WS-032-MP',
+                timestamp: '2023-12-29T19:45:00Z',
+                organization: 'apac',
+                severity: 'high',
+                description: 'Malicious registry key created',
+                mitigated: false
+              }
+            ]
           },
           {
             id: 'T1547.003',
@@ -287,7 +564,18 @@ export const mitreData: Tactic[] = [
       {
         id: 'T1548',
         name: 'Abuse Elevation Control Mechanism',
-        attacks: [],
+        attacks: [
+          {
+            id: 'att_035',
+            user: 'guest.user@company.com',
+            endpoint: 'WS-033-GU',
+            timestamp: '2023-12-28T14:20:00Z',
+            organization: 'ipac',
+            severity: 'medium',
+            description: 'UAC bypass attempt detected',
+            mitigated: true
+          }
+        ],
         subTechniques: [
           {
             id: 'T1548.002',
@@ -322,17 +610,90 @@ export const mitreData: Tactic[] = [
       {
         id: 'T1070',
         name: 'Indicator Removal',
-        attacks: [],
+        attacks: [
+          {
+            id: 'att_036',
+            user: 'system.cleaner',
+            endpoint: 'SRV-LOG-01',
+            timestamp: '2023-12-27T22:10:00Z',
+            organization: 'operations',
+            severity: 'high',
+            description: 'Event log clearing detected',
+            mitigated: false
+          },
+          {
+            id: 'att_037',
+            user: 'temp.user@company.com',
+            endpoint: 'WS-034-TU',
+            timestamp: '2023-12-26T13:45:00Z',
+            organization: 'americas',
+            severity: 'medium',
+            description: 'File deletion after execution',
+            mitigated: true
+          },
+          {
+            id: 'att_038',
+            user: 'contractor@company.com',
+            endpoint: 'WS-035-CON',
+            timestamp: '2023-12-25T09:30:00Z',
+            organization: 'emea',
+            severity: 'low',
+            description: 'Temporary file cleanup',
+            mitigated: true
+          },
+          {
+            id: 'att_039',
+            user: 'automation.service',
+            endpoint: 'SRV-AUTO-01',
+            timestamp: '2023-12-24T18:15:00Z',
+            organization: 'operations',
+            severity: 'high',
+            description: 'Automated evidence removal',
+            mitigated: false
+          }
+        ],
         subTechniques: [
           {
             id: 'T1070.001',
             name: 'Clear Windows Event Logs',
-            attacks: []
+            attacks: [
+              {
+                id: 'att_040',
+                user: 'admin.breach@company.com',
+                endpoint: 'SRV-SEC-01',
+                timestamp: '2023-12-23T16:30:00Z',
+                organization: 'operations',
+                severity: 'high',
+                description: 'Security event logs cleared',
+                mitigated: false
+              },
+              {
+                id: 'att_041',
+                user: 'maint.script',
+                endpoint: 'SRV-UTIL-01',
+                timestamp: '2023-12-22T11:45:00Z',
+                organization: 'operations',
+                severity: 'medium',
+                description: 'Routine maintenance log clearing',
+                mitigated: true
+              }
+            ]
           },
           {
             id: 'T1070.004',
             name: 'File Deletion',
-            attacks: []
+            attacks: [
+              {
+                id: 'att_042',
+                user: 'stealth.process',
+                endpoint: 'WS-036-SP',
+                timestamp: '2023-12-21T20:20:00Z',
+                organization: 'apac',
+                severity: 'high',
+                description: 'Malware self-deletion detected',
+                mitigated: false
+              }
+            ]
           }
         ]
       },
@@ -368,7 +729,18 @@ export const mitreData: Tactic[] = [
       {
         id: 'T1003',
         name: 'OS Credential Dumping',
-        attacks: [],
+        attacks: [
+          {
+            id: 'att_043',
+            user: 'system.exploit',
+            endpoint: 'SRV-CRED-01',
+            timestamp: '2023-12-20T07:15:00Z',
+            organization: 'operations',
+            severity: 'high',
+            description: 'LSASS memory dump attempt',
+            mitigated: false
+          }
+        ],
         subTechniques: [
           {
             id: 'T1003.001',
@@ -385,7 +757,28 @@ export const mitreData: Tactic[] = [
       {
         id: 'T1110',
         name: 'Brute Force',
-        attacks: [],
+        attacks: [
+          {
+            id: 'att_044',
+            user: 'external.attacker',
+            endpoint: 'SRV-RDP-01',
+            timestamp: '2023-12-19T12:30:00Z',
+            organization: 'operations',
+            severity: 'medium',
+            description: 'RDP brute force attack detected',
+            mitigated: true
+          },
+          {
+            id: 'att_045',
+            user: 'bot.network',
+            endpoint: 'SRV-SSH-01',
+            timestamp: '2023-12-18T03:45:00Z',
+            organization: 'operations',
+            severity: 'high',
+            description: 'SSH brute force from botnet',
+            mitigated: false
+          }
+        ],
         subTechniques: []
       },
       {
@@ -403,7 +796,18 @@ export const mitreData: Tactic[] = [
       {
         id: 'T1083',
         name: 'File and Directory Discovery',
-        attacks: [],
+        attacks: [
+          {
+            id: 'att_046',
+            user: 'recon.process',
+            endpoint: 'WS-037-RP',
+            timestamp: '2023-12-17T15:20:00Z',
+            organization: 'ipac',
+            severity: 'low',
+            description: 'Directory enumeration detected',
+            mitigated: true
+          }
+        ],
         subTechniques: []
       },
       {
