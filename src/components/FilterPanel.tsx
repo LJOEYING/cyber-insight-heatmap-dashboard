@@ -28,7 +28,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ filters, onFilterChange }) =>
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Filter by User</label>
           <input
@@ -36,7 +36,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ filters, onFilterChange }) =>
             value={filters.user}
             onChange={(e) => onFilterChange('user', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter user"
+            placeholder="Enter user email"
           />
         </div>
         
@@ -47,7 +47,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ filters, onFilterChange }) =>
             value={filters.endpoint}
             onChange={(e) => onFilterChange('endpoint', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter endpoint"
+            placeholder="Enter endpoint ID"
           />
         </div>
         
@@ -72,22 +72,15 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ filters, onFilterChange }) =>
           <div className="relative">
             <select
               value={filters.organization[0] || ''}
-              onChange={(e) => onFilterChange('organization', [e.target.value])}
+              onChange={(e) => onFilterChange('organization', e.target.value ? [e.target.value] : [])}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 appearance-none"
             >
-              <option value="">Select organization</option>
+              <option value="">All organizations</option>
               <option value="operations">Operations</option>
               <option value="ipac">IPAC</option>
               <option value="emea">EMEA</option>
             </select>
             <ChevronDown className="absolute right-3 top-3 h-4 w-4 text-gray-400 pointer-events-none" />
-          </div>
-        </div>
-        
-        <div className="lg:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Total Attacks</label>
-          <div className="bg-blue-600 text-white px-4 py-2 rounded-md text-center font-semibold">
-            1,247
           </div>
         </div>
       </div>

@@ -1,40 +1,87 @@
 
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
+import { mitreData, Attack, Technique, SubTechnique } from '@/data/mitreData';
+import AttackTooltip from './AttackTooltip';
 
-interface SubTechnique {
-  id: string;
-  name: string;
-  attacks: number;
+interface MitreHeatmapProps {
+  filters: {
+    user: string;
+    endpoint: string;
+    timePeriod: string;
+    organization: string[];
+    showSubTechniques: boolean;
+    showMitigations: boolean;
+    showEvents: boolean;
+    showPotentialAttacks: boolean;
+    showSuccessfulAttacks: boolean;
+  };
 }
 
-interface Technique {
-  id: string;
-  name: string;
-  attacks: number;
-  subTechniques: SubTechnique[];
-}
-
-interface Tactic {
-  id: string;
-  name: string;
-  techniques: Technique[];
-}
-
-const MitreHeatmap: React.FC = () => {
+const MitreHeatmap: React.FC<MitreHeatmapProps> = ({ filters }) => {
   const [expandedTechniques, setExpandedTechniques] = useState<Set<string>>(new Set());
+  const [tooltip, setTooltip] = useState<{
+    isVisible: boolean;
+    attacks: Attack[];
+    techniqueName: string;
+    position: { x: number; y: number };
+  }>({
+    isVisible: false,
+    attacks: [],
+    techniqueName: '',
+    position: { x: 0, y: 0 }
+  });
+
+  const filterAttacks = (attacks: Attack[]): Attack[] => {
+    return attacks.filter(attack => {
+      // Filter by user
+      if (filters.user && !attack.user.toLowerCase().includes(filters.user.toLowerCase())) {
+        return false;
+      }
+      
+      // Filter by endpoint
+      if (filters.endpoint && !attack.endpoint.toLowerCase().includes(filters.endpoint.toLowerCase())) {
+        return false;
+      }
+      
+      // Filter by organization
+      if (filters.organization.length > 0 && !filters.organization.includes(attack.organization)) {
+        return false;
+      }
+      
+      // Filter by time period
+      const attackDate = new Date(attack.timestamp);
+      const now = new Date();
+      const daysAgo = {
+        '7days': 7,
+        '30days': 30,
+        '90days': 90
+      }[filters.timePeriod] || 30;
+      
+      const cutoffDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
+      if (attackDate < cutoffDate) {
+        return false;
+      }
+      
+      return true;
+    });
+  };
+
+  const getFilteredAttackCount = (attacks: Attack[]): number => {
+    return filterAttacks(attacks).length;
+  };
 
   const getIntensityColor = (attacks: number): string => {
     if (attacks === 0) return 'bg-white border-gray-200';
-    if (attacks <= 5) return 'bg-blue-100 border-blue-200';
-    if (attacks <= 15) return 'bg-orange-100 border-orange-200';
+    if (attacks <= 2) return 'bg-blue-100 border-blue-200';
+    if (attacks <= 5) return 'bg-orange-100 border-orange-200';
     return 'bg-red-100 border-red-200';
   };
 
   const getIntensityTextColor = (attacks: number): string => {
     if (attacks === 0) return 'text-gray-600';
-    if (attacks <= 5) return 'text-blue-800';
-    if (attacks <= 15) return 'text-orange-800';
+    if (attacks <= 2) return 'text-blue-800';
+    if (attacks <= 5) return 'text-orange-800';
     return 'text-red-800';
   };
 
@@ -48,184 +95,105 @@ const MitreHeatmap: React.FC = () => {
     setExpandedTechniques(newExpanded);
   };
 
-  const tactics: Tactic[] = [
-    {
-      id: 'initial-access',
-      name: 'Initial Access',
-      techniques: [
-        {
-          id: 'T1566',
-          name: 'Phishing',
-          attacks: 23,
-          subTechniques: [
-            { id: 'T1566.001', name: 'Spearphishing Attachment', attacks: 15 },
-            { id: 'T1566.002', name: 'Spearphishing Link', attacks: 8 }
-          ]
-        },
-        {
-          id: 'T1190',
-          name: 'Exploit Public-Facing Application',
-          attacks: 12,
-          subTechniques: []
-        },
-        {
-          id: 'T1078',
-          name: 'Valid Accounts',
-          attacks: 8,
-          subTechniques: [
-            { id: 'T1078.003', name: 'Local Accounts', attacks: 5 },
-            { id: 'T1078.004', name: 'Cloud Accounts', attacks: 3 }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'execution',
-      name: 'Execution',
-      techniques: [
-        {
-          id: 'T1059',
-          name: 'Command and Scripting Interpreter',
-          attacks: 18,
-          subTechniques: [
-            { id: 'T1059.001', name: 'PowerShell', attacks: 10 },
-            { id: 'T1059.003', name: 'Windows Command Shell', attacks: 8 }
-          ]
-        },
-        {
-          id: 'T1203',
-          name: 'Exploitation for Client Execution',
-          attacks: 7,
-          subTechniques: []
-        },
-        {
-          id: 'T1204',
-          name: 'User Execution',
-          attacks: 14,
-          subTechniques: [
-            { id: 'T1204.002', name: 'Malicious File', attacks: 14 }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'persistence',
-      name: 'Persistence',
-      techniques: [
-        {
-          id: 'T1547',
-          name: 'Boot or Logon Autostart Execution',
-          attacks: 9,
-          subTechniques: [
-            { id: 'T1547.001', name: 'Registry Run Keys', attacks: 6 },
-            { id: 'T1547.004', name: 'Winlogon Helper DLL', attacks: 3 }
-          ]
-        },
-        {
-          id: 'T1053',
-          name: 'Scheduled Task/Job',
-          attacks: 11,
-          subTechniques: [
-            { id: 'T1053.005', name: 'Scheduled Task', attacks: 11 }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'privilege-escalation',
-      name: 'Privilege Escalation',
-      techniques: [
-        {
-          id: 'T1548',
-          name: 'Abuse Elevation Control Mechanism',
-          attacks: 6,
-          subTechniques: [
-            { id: 'T1548.002', name: 'Bypass User Access Control', attacks: 6 }
-          ]
-        },
-        {
-          id: 'T1055',
-          name: 'Process Injection',
-          attacks: 4,
-          subTechniques: []
-        }
-      ]
-    },
-    {
-      id: 'defense-evasion',
-      name: 'Defense Evasion',
-      techniques: [
-        {
-          id: 'T1070',
-          name: 'Indicator Removal',
-          attacks: 13,
-          subTechniques: [
-            { id: 'T1070.004', name: 'File Deletion', attacks: 8 },
-            { id: 'T1070.001', name: 'Clear Windows Event Logs', attacks: 5 }
-          ]
-        },
-        {
-          id: 'T1027',
-          name: 'Obfuscated Files or Information',
-          attacks: 16,
-          subTechniques: [
-            { id: 'T1027.002', name: 'Software Packing', attacks: 10 },
-            { id: 'T1027.005', name: 'Indicator Removal from Tools', attacks: 6 }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'credential-access',
-      name: 'Credential Access',
-      techniques: [
-        {
-          id: 'T1003',
-          name: 'OS Credential Dumping',
-          attacks: 8,
-          subTechniques: [
-            { id: 'T1003.001', name: 'LSASS Memory', attacks: 5 },
-            { id: 'T1003.002', name: 'Security Account Manager', attacks: 3 }
-          ]
-        }
-      ]
-    },
-    {
-      id: 'discovery',
-      name: 'Discovery',
-      techniques: [
-        {
-          id: 'T1083',
-          name: 'File and Directory Discovery',
-          attacks: 12,
-          subTechniques: []
-        },
-        {
-          id: 'T1057',
-          name: 'Process Discovery',
-          attacks: 9,
-          subTechniques: []
-        }
-      ]
-    },
-    {
-      id: 'collection',
-      name: 'Collection',
-      techniques: [
-        {
-          id: 'T1005',
-          name: 'Data from Local System',
-          attacks: 7,
-          subTechniques: []
-        }
-      ]
-    }
-  ];
+  const handleMouseEnter = (event: React.MouseEvent, attacks: Attack[], techniqueName: string) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    setTooltip({
+      isVisible: true,
+      attacks: filterAttacks(attacks),
+      techniqueName,
+      position: {
+        x: rect.left + rect.width / 2,
+        y: rect.top
+      }
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setTooltip(prev => ({ ...prev, isVisible: false }));
+  };
+
+  const renderTechnique = (technique: Technique) => {
+    const filteredAttacks = getFilteredAttackCount(technique.attacks);
+    const hasSubTechniques = technique.subTechniques.length > 0;
+    const showSubTechniques = filters.showSubTechniques && hasSubTechniques;
+
+    return (
+      <div key={technique.id}>
+        <div
+          className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:shadow-md ${getIntensityColor(filteredAttacks)}`}
+          onClick={() => showSubTechniques && toggleTechnique(technique.id)}
+          onMouseEnter={(e) => handleMouseEnter(e, technique.attacks, technique.name)}
+          onMouseLeave={handleMouseLeave}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <div className={`font-medium text-sm ${getIntensityTextColor(filteredAttacks)}`}>
+                {technique.name}
+              </div>
+              <div className={`text-xs ${getIntensityTextColor(filteredAttacks)}`}>
+                {filteredAttacks} attacks
+              </div>
+            </div>
+            {showSubTechniques && (
+              <div className={`ml-2 ${getIntensityTextColor(filteredAttacks)}`}>
+                {expandedTechniques.has(technique.id) ? (
+                  <ChevronDown className="w-4 h-4" />
+                ) : (
+                  <ChevronRight className="w-4 h-4" />
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {showSubTechniques && expandedTechniques.has(technique.id) && (
+          <div className="ml-4 space-y-1 mt-1">
+            {technique.subTechniques.map((subTechnique) => {
+              const subFilteredAttacks = getFilteredAttackCount(subTechnique.attacks);
+              return (
+                <div
+                  key={subTechnique.id}
+                  className={`p-2 rounded-md border text-xs cursor-pointer transition-all duration-200 hover:shadow-sm ${getIntensityColor(subFilteredAttacks)}`}
+                  onMouseEnter={(e) => handleMouseEnter(e, subTechnique.attacks, subTechnique.name)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <div className={`font-medium ${getIntensityTextColor(subFilteredAttacks)}`}>
+                    {subTechnique.name}
+                  </div>
+                  <div className={getIntensityTextColor(subFilteredAttacks)}>
+                    {subFilteredAttacks} attacks
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const calculateTotalAttacks = () => {
+    let total = 0;
+    mitreData.forEach(tactic => {
+      tactic.techniques.forEach(technique => {
+        total += getFilteredAttackCount(technique.attacks);
+        technique.subTechniques.forEach(subTechnique => {
+          total += getFilteredAttackCount(subTechnique.attacks);
+        });
+      });
+    });
+    return total;
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">MITRE ATT&CK Heatmap</h2>
+        <div className="flex items-center space-x-4">
+          <h2 className="text-lg font-semibold text-gray-900">MITRE ATT&CK Heatmap</h2>
+          <div className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-semibold">
+            Total: {calculateTotalAttacks()} attacks
+          </div>
+        </div>
         <div className="flex items-center space-x-4">
           <div className="text-sm text-gray-600">Legend:</div>
           <div className="flex items-center space-x-2">
@@ -235,15 +203,15 @@ const MitreHeatmap: React.FC = () => {
             </div>
             <div className="flex items-center space-x-1">
               <div className="w-4 h-4 bg-blue-100 border border-blue-200 rounded"></div>
-              <span className="text-xs text-gray-600">Low (1-5)</span>
+              <span className="text-xs text-gray-600">Low (1-2)</span>
             </div>
             <div className="flex items-center space-x-1">
               <div className="w-4 h-4 bg-orange-100 border border-orange-200 rounded"></div>
-              <span className="text-xs text-gray-600">Medium (6-15)</span>
+              <span className="text-xs text-gray-600">Medium (3-5)</span>
             </div>
             <div className="flex items-center space-x-1">
               <div className="w-4 h-4 bg-red-100 border border-red-200 rounded"></div>
-              <span className="text-xs text-gray-600">High (16+)</span>
+              <span className="text-xs text-gray-600">High (6+)</span>
             </div>
           </div>
         </div>
@@ -251,63 +219,25 @@ const MitreHeatmap: React.FC = () => {
       
       <div className="overflow-x-auto">
         <div className="inline-flex space-x-4 min-w-full">
-          {tactics.map((tactic) => (
+          {mitreData.map((tactic) => (
             <div key={tactic.id} className="flex-shrink-0 w-72">
               <div className="bg-gray-50 border border-gray-200 rounded-t-lg p-3 text-center">
                 <h3 className="font-semibold text-gray-900 text-sm">{tactic.name}</h3>
               </div>
-              <div className="border-l border-r border-b border-gray-200 rounded-b-lg space-y-1 p-2">
-                {tactic.techniques.map((technique) => (
-                  <div key={technique.id}>
-                    <div
-                      className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:shadow-md ${getIntensityColor(technique.attacks)}`}
-                      onClick={() => technique.subTechniques.length > 0 && toggleTechnique(technique.id)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className={`font-medium text-sm ${getIntensityTextColor(technique.attacks)}`}>
-                            {technique.name}
-                          </div>
-                          <div className={`text-xs ${getIntensityTextColor(technique.attacks)}`}>
-                            {technique.attacks} attacks
-                          </div>
-                        </div>
-                        {technique.subTechniques.length > 0 && (
-                          <div className={`ml-2 ${getIntensityTextColor(technique.attacks)}`}>
-                            {expandedTechniques.has(technique.id) ? (
-                              <ChevronDown className="w-4 h-4" />
-                            ) : (
-                              <ChevronRight className="w-4 h-4" />
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {expandedTechniques.has(technique.id) && technique.subTechniques.length > 0 && (
-                      <div className="ml-4 space-y-1 mt-1">
-                        {technique.subTechniques.map((subTechnique) => (
-                          <div
-                            key={subTechnique.id}
-                            className={`p-2 rounded-md border text-xs ${getIntensityColor(subTechnique.attacks)}`}
-                          >
-                            <div className={`font-medium ${getIntensityTextColor(subTechnique.attacks)}`}>
-                              {subTechnique.name}
-                            </div>
-                            <div className={getIntensityTextColor(subTechnique.attacks)}>
-                              {subTechnique.attacks} attacks
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
+              <div className="border-l border-r border-b border-gray-200 rounded-b-lg space-y-1 p-2 min-h-[200px]">
+                {tactic.techniques.map(renderTechnique)}
               </div>
             </div>
           ))}
         </div>
       </div>
+      
+      <AttackTooltip
+        attacks={tooltip.attacks}
+        techniqueName={tooltip.techniqueName}
+        isVisible={tooltip.isVisible}
+        position={tooltip.position}
+      />
     </div>
   );
 };
