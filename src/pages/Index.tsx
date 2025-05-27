@@ -1,8 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Navigation from '@/components/Navigation';
 import FilterPanel from '@/components/FilterPanel';
 import MitreHeatmap from '@/components/MitreHeatmap';
+import { mitreData } from '@/data/mitreData';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('mitre');
@@ -25,6 +26,19 @@ const Index = () => {
     }));
   };
 
+  const totalAttacks = useMemo(() => {
+    let count = 0;
+    mitreData.forEach(tactic => {
+      tactic.techniques.forEach(technique => {
+        count += technique.attacks.length;
+        technique.subTechniques.forEach(subTechnique => {
+          count += subTechnique.attacks.length;
+        });
+      });
+    });
+    return count;
+  }, []);
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -44,8 +58,12 @@ const Index = () => {
       case 'mitre':
         return (
           <>
-            <FilterPanel filters={filters} onFilterChange={handleFilterChange} />
-            <MitreHeatmap />
+            <FilterPanel 
+              filters={filters} 
+              onFilterChange={handleFilterChange} 
+              totalAttacks={totalAttacks}
+            />
+            <MitreHeatmap filters={filters} />
           </>
         );
       default:
