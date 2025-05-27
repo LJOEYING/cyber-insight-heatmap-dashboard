@@ -45,7 +45,7 @@ const Index = () => {
         return (
           <>
             <FilterPanel filters={filters} onFilterChange={handleFilterChange} />
-            <MitreHeatmap filters={filters} />
+            <MitreHeatmap />
           </>
         );
       default:

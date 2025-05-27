@@ -19,15 +19,15 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <h1 className="text-xl font-bold text-gray-900 mr-8">ISMS Dashboard</h1>
-            <nav className="flex">
+            <nav className="flex space-x-1">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => onTabChange(tab.id)}
-                  className={`px-6 py-4 text-sm font-medium transition-colors duration-200 border-b-2 ${
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
                     activeTab === tab.id
-                      ? 'text-blue-600 border-blue-600'
-                      : 'text-gray-600 hover:text-gray-900 border-transparent hover:border-gray-300'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   {tab.label}
